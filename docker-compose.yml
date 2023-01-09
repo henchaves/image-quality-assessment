@@ -1,1 +1,12 @@
+version: '3'
 
+services:
+  ai:
+    build: ./services/ai
+    volumes:
+      - ./services/ai:/app
+    ports:
+      - 8080:8080
+    env_file:
+      - ./services/ai/.env
+    command: jupyter lab --ip 0.0.0.0 --port 8080 --allow-root --ServerApp.token=imt
