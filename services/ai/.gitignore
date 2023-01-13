@@ -90,3 +90,6 @@ target/
 
 # Image files
 *.jpg
+
+# Processed data
+/data/processed/

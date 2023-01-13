@@ -4,7 +4,7 @@ RUN mkdir app
 WORKDIR /app
 
 ENV PATH="${PATH}:/root/.local/bin"
-ENV PYTHONPATH=.
+ENV PYTHONPATH=/app
 
 COPY requirements.txt .
 
