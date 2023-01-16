@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     for group_id in groups:
         print(f"Uploading results for group {group_id} ...")
-        results = load_results(group_id)
+        results = load_results(group_id, results_dir_path)
         duplicate_images_df = pd.DataFrame(columns=["group_id", "base_image_id", "duplicated_image_id", "probability"])
         
         for base_image, duplicated_images in results.items():
