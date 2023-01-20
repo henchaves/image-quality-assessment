@@ -10,16 +10,25 @@
       <div class="col-sm">
         <Image :imageId="image2Id" :imageUrl="image2Url" />
       </div>
-      <div class="col-sm d-flex flex-column justify-content-center">
-        <!-- align middle -->
-        <button class="btn btn-primary" @click="vote">Duplicated</button><br>
-        <button class="btn btn-primary" @click="vote">Not duplicated</button>
 
+      <div v-if="!duplicateValidated" class="check-duplicate col-sm d-flex flex-column justify-content-center" hidden>
+        <p>Are these two photos duplicates?</p>
+        <button class="btn btn-success" @click="handleDuplicated">Yes</button><br>
+        <button class="btn btn-danger" @click="handleNotDuplicated">No</button>
       </div>
-      <!-- <div class="images row">
-      <Image :imageId="image1Id" :imageUrl="image1Url" />
-      <Image :imageId="image2Id" :imageUrl="image2Url" />
-    </div> -->
+
+      <div v-if="duplicateValidated && isDuplicate && !qualityValidated" class="check-quality col-sm d-flex flex-column justify-content-center">
+        <p>Which photo has the best quality?</p>
+        <button class="btn btn-primary" @click="vote(1)">First photo (ID: {{ image1Id }})</button><br>
+        <button class="btn btn-primary" @click="vote(2)">Second photo (ID: {{ image2Id }})</button>
+      </div>
+
+      <div v-if="(duplicateValidated && !isDuplicate) || (duplicateValidated && qualityValidated)" class="feedback col-sm d-flex flex-column justify-content-center">
+        <p>Thank you for your feedback!</p>
+        <button class="btn btn-primary" @click="handleNext">Next pair</button>
+      </div>
+
+
     </div>
   </div>
 
@@ -27,6 +36,8 @@
 
 <script>
 import Image from './Image.vue';
+
+
 
 export default {
   name: 'ImagesCard',
@@ -38,6 +49,31 @@ export default {
     image1Url: String,
     image2Id: String,
     image2Url: String,
-  }
+  },
+  data() {
+    return {
+      duplicateValidated: false,
+      qualityValidated: false,
+      isDuplicate: false,
+    };
+  },
+  methods: {
+    handleDuplicated() {
+      this.duplicateValidated = true;
+      this.isDuplicate = true;
+    },
+    handleNotDuplicated() {
+      this.duplicateValidated = true;
+      this.isDuplicate = false;
+    },
+    vote(imageId) {
+      this.qualityValidated = true;
+      console.log('vote', imageId);
+    },
+    handleNext() {
+      this.$router.go();
+    },
+
+  },
 }
 </script>
