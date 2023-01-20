@@ -31,9 +31,10 @@ if __name__ == '__main__':
 
     encoder = CNN()
 
+    print("Total groups:", len(groups))
     # loop over groups with concurrent executor
-    for group_id in groups:
-        print(f"Processing group {group_id}...")
+    for index, group_id in enumerate(groups):
+        print(f"{index} - Processing group {group_id}...")
         process_group(encoder, images_df, group_id, images_dir_path, results_dir_path)
 
 
