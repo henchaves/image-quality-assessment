@@ -1,10 +1,8 @@
 <template>
-  <h1>Hello</h1>
-
   <div class="home">
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App" />
-     -->
+    <NavBar />
     <ImagesCard :image1Id="images[0].id" :image1Url="images[0].url" :image2Id="images[1].id" :image2Url="images[1].url" />
+
 
   </div>
 </template>
@@ -13,6 +11,7 @@
 // @ is an alias to /src
 
 import ImagesCard from '@/components/ImagesCard.vue'
+import NavBar from '@/components/NavBar.vue';
 
 const images = [
   {
@@ -28,7 +27,8 @@ const images = [
 export default {
   name: 'HomeView',
   components: {
-    ImagesCard
+    ImagesCard,
+    NavBar
   },
   data() {
     return {
