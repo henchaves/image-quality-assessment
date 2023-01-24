@@ -4,7 +4,7 @@ import pandas as pd
 import json
 import random
 from src.data.utils import load_json_as_df
-
+from bson import json_util
 from src.constants import (
     RAW_DIR_PATH,
 )
@@ -14,10 +14,8 @@ def conect_mongo():
     DB_USERNAME = os.getenv("MONGO_USERNAME")
     DB_PASSWORD = os.getenv("MONGO_PASSWORD")
     DB_URL = os.getenv("MONGO_URL")
-    DB_NAME = os.getenv("MONGO_DB")
 
-    client = pymongo.MongoClient(f"mongodb+srv://{DB_USERNAME}:{DB_PASSWORD}@{DB_URL}/?retryWrites=true&w=majority")
-    return client[DB_NAME]
+    return pymongo.MongoClient(f"mongodb+srv://{DB_USERNAME}:{DB_PASSWORD}@{DB_URL}/?retryWrites=true&w=majority")
    
 
 
@@ -47,6 +45,10 @@ def get_score_duplicated(db,image_1,image_2, group_id):
     df = pd.DataFrame(collectionDuplicated.find())
     df=df[(df["base_image_id"] == image_1)&(df["duplicated_image_id"]==image_2)&(df["group_id"]==group_id)]
     return  df['probability'].iloc[0] if not(df.empty) else 0
+
+def save_human_result(db, result):
+    db.human_results.insert_one((result.__dict__))
+
 
 
 
