@@ -9,6 +9,11 @@ import pandas as pd
 from datetime import datetime as dt
 from src.features.dedup_model import load_results
 
+# disable pandas warnings
+import warnings
+warnings.filterwarnings('ignore')
+
+
 results_dir_path = os.path.join(PROCESSED_DIR_PATH, "dedup_results")
 
 DB_USERNAME = os.getenv("MONGO_USERNAME")
@@ -24,28 +29,33 @@ if __name__ == "__main__":
     groups = [group[:-5] for group in os.listdir(results_dir_path) if group.endswith(".json")]
 
     for group_id in groups:
-        print(f"Uploading results for group {group_id} ...")
-        results = load_results(group_id, results_dir_path)
-        duplicate_images_df = pd.DataFrame(columns=["group_id", "base_image_id", "duplicated_image_id", "probability"])
-        
-        for base_image, duplicated_images in results.items():
-            base_image_id = base_image.split(".")[0]
-            for duplicated_image in duplicated_images:
-              duplicated_image_id = duplicated_image[0].split(".")[0]
-              probability = duplicated_image[1]
-        
-              row = {
-                "group_id": group_id,
-                "base_image_id": base_image_id,
-                "duplicated_image_id": duplicated_image_id,
-                "probability": probability
-              }
-        
-              duplicate_images_df = duplicate_images_df.append(row, ignore_index=True)
-        
-        duplicates_dict = duplicate_images_df.to_dict("index")
-        duplicates_array = [{"date": dt.utcnow(), **obj} for obj in duplicates_dict.values()]
-        db["duplicated_images_model_results"].insert_many(duplicates_array)
+        try:
+          print(f"Uploading results for group {group_id} ...")
+          results = load_results(group_id, results_dir_path)
+          duplicate_images_df = pd.DataFrame(columns=["group_id", "base_image_id", "duplicated_image_id", "probability"])
+          
+          for base_image, duplicated_images in results.items():
+              base_image_id = base_image.split(".")[0]
+              for duplicated_image in duplicated_images:
+                duplicated_image_id = duplicated_image[0].split(".")[0]
+                probability = duplicated_image[1]
+                if int(base_image_id) > int(duplicated_image_id):
+                  base_image_id, duplicated_image_id = duplicated_image_id, base_image_id
+                row = {
+                  "group_id": group_id,
+                  "base_image_id": base_image_id,
+                  "duplicated_image_id": duplicated_image_id,
+                  "probability": probability
+                }
+          
+                duplicate_images_df = duplicate_images_df.append(row, ignore_index=True)
+          
+          duplicate_images_df = duplicate_images_df.drop_duplicates()
+          duplicates_dict = duplicate_images_df.to_dict("index")
+          duplicates_array = [{"date": dt.utcnow(), **obj} for obj in duplicates_dict.values()]
+          db["duplicated_images_model_results"].insert_many(duplicates_array)
+        except Exception as e:
+          print(f"Error uploading results for group {group_id}: {e}")
       
 
 

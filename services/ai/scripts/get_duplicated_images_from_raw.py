@@ -19,9 +19,13 @@ results_dir_path = os.path.join(PROCESSED_DIR_PATH, "dedup_results")
 
 
 def process_group(encoder, images_df, group_id, images_dir_path, results_dir_path):
-    download_images_from_group(images_df, group_id, images_dir_path)
-    find_duplicates(encoder, group_id, images_dir_path, results_dir_path)
-    delete_images_from_group(group_id, images_dir_path)
+    try:
+        download_images_from_group(images_df, group_id, images_dir_path)
+        find_duplicates(encoder, group_id, images_dir_path, results_dir_path, threshold=0.5)
+    except Exception as e:
+        print(f"Error processing group {group_id}: {e}")
+    finally:
+        delete_images_from_group(group_id, images_dir_path)
 
 if __name__ == '__main__':
     
@@ -32,8 +36,9 @@ if __name__ == '__main__':
     encoder = CNN()
 
     print("Total groups:", len(groups))
+    groups_to_process = groups[:33]
     # loop over groups with concurrent executor
-    for index, group_id in enumerate(groups):
+    for index, group_id in enumerate(groups_to_process):
         print(f"{index} - Processing group {group_id}...")
         process_group(encoder, images_df, group_id, images_dir_path, results_dir_path)
 
