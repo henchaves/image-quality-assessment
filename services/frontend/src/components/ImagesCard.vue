@@ -19,8 +19,8 @@
 
       <div v-if="duplicateValidated && isDuplicate && !qualityValidated" class="check-quality col-sm d-flex flex-column justify-content-center">
         <p>Which photo has the best quality?</p>
-        <button class="btn btn-primary" @click="vote(1)">First photo (ID: {{ images[0].image_id }})</button><br>
-        <button class="btn btn-primary" @click="vote(2)">Second photo (ID: {{ images[1].image_id }})</button>
+        <button class="btn btn-primary" @click="vote(0)">First photo (ID: {{ images[0].image_id }})</button><br>
+        <button class="btn btn-primary" @click="vote(1)">Second photo (ID: {{ images[1].image_id }})</button>
       </div>
 
       <div v-if="(duplicateValidated && !isDuplicate) || (duplicateValidated && qualityValidated)" class="feedback col-sm d-flex flex-column justify-content-center">
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Image from './Image.vue';
 
 export default {
@@ -63,6 +64,7 @@ export default {
       duplicateValidated: false,
       qualityValidated: false,
       isDuplicate: false,
+      bestImage: null,
     };
   },
   methods: {
@@ -73,10 +75,38 @@ export default {
     handleNotDuplicated() {
       this.duplicateValidated = true;
       this.isDuplicate = false;
+
+      axios.post('http://localhost:5000/human_result', {
+        image_1: this.images[0].image_id,
+        image_2: this.images[1].image_id,
+        duplicated: this.isDuplicate,
+        best_image: "",
+        group_id: this.images[0].group_id
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     vote(imageId) {
       this.qualityValidated = true;
-      console.log('vote', imageId);
+      this.bestImage = this.images[imageId];
+
+      axios.post('http://localhost:5000/human_result', {
+        image_1: this.images[0].image_id,
+        image_2: this.images[1].image_id,
+        duplicated: this.isDuplicate,
+        best_image: this.bestImage.image_id,
+        group_id: this.bestImage.group_id
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     handleNext() {
       this.$router.go();
