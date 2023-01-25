@@ -26,10 +26,10 @@
       <div v-if="(duplicateValidated && !isDuplicate) || (duplicateValidated && qualityValidated)" class="feedback col-sm d-flex flex-column justify-content-center">
         <h4>Thank you for your feedback!</h4>
         <div class="mb-4 mt-4">
-          <b>Model results:</b>
-          <p>Probability of duplicated: {{ score }}</p>
-          <p>Quality of first photo: {{ images[0].mean_score_prediction.toFixed(2) }}</p>
-          <p>Quality of second photo: {{ images[1].mean_score_prediction.toFixed(2) }}</p>
+          <h5>Model results:</h5>
+          <p>Probability of duplicated: <b>{{ score.toFixed(4) * 100 }}%</b></p>
+          <p>Quality of first photo (ID {{ images[0].image_id }}): <b>{{ images[0].mean_score_prediction.toFixed(2) }}</b></p>
+          <p>Quality of second photo (ID {{ images[1].image_id }}): <b>{{ images[1].mean_score_prediction.toFixed(2) }}</b></p>
         </div>
         <button class="btn btn-primary" @click="handleNext">Next pair</button>
       </div>
