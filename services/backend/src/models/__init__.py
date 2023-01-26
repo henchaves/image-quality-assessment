@@ -1,10 +1,8 @@
 import os
 import pymongo
 import pandas as pd
-import json
 import random
 from src.data.utils import load_json_as_df
-from bson import json_util
 from src.constants import (
     RAW_DIR_PATH,
 )
@@ -40,31 +38,22 @@ def dataset_images():
     return load_json_as_df(images_json_file_path, index_col="image_id")
 
 
-def get_score_duplicated(db,image_1,image_2, group_id):
-    collectionDuplicated = db['duplicated_images_model_results']
-    df = pd.DataFrame(collectionDuplicated.find())
-    df=df[(df["base_image_id"] == image_1)&(df["duplicated_image_id"]==image_2)&(df["group_id"]==group_id)]
-    return  df['probability'].iloc[0] if not(df.empty) else 0
+def get_score_duplicated(db,image_id, group_id):
+    collectionDuplicated = db["quality_assessment_results"]
+    df = pd.DataFrame(collectionDuplicated.find({'group_id': group_id, 'image_id':image_id}))
+    df = df.sample()
+    del df['_id']
+    del df['date']
+    return  df
 
 def save_human_result(db, result):
     db.human_results.insert_one((result.__dict__))
 
 
+def get_random_pair(db):
+    collectionDuplicated = db['duplicated_images_model_results']
+    result = list(collectionDuplicated.aggregate([{'$sample': {'size':1}}]))[0]
+    del result['_id']
+    del result['date'] 
+    return result
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
