@@ -27,7 +27,7 @@
         <h4>Thank you for your feedback!</h4>
         <div class="mb-4 mt-4">
           <h5>Model results:</h5>
-          <p>Probability of duplicated: <b>{{ score.toFixed(4) * 100 }}%</b></p>
+          <p>Probability of duplicated: <b>{{ (score * 100).toFixed(2) }}%</b></p>
           <p>Quality of first photo (ID {{ images[0].image_id }}): <b>{{ images[0].mean_score_prediction.toFixed(2) }}</b></p>
           <p>Quality of second photo (ID {{ images[1].image_id }}): <b>{{ images[1].mean_score_prediction.toFixed(2) }}</b></p>
         </div>

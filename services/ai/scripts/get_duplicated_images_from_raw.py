@@ -21,7 +21,7 @@ results_dir_path = os.path.join(PROCESSED_DIR_PATH, "dedup_results")
 def process_group(encoder, images_df, group_id, images_dir_path, results_dir_path):
     try:
         download_images_from_group(images_df, group_id, images_dir_path)
-        find_duplicates(encoder, group_id, images_dir_path, results_dir_path, threshold=0.5)
+        find_duplicates(encoder, group_id, images_dir_path, results_dir_path, threshold=0.75)
     except Exception as e:
         print(f"Error processing group {group_id}: {e}")
     finally:
