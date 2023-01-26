@@ -5,10 +5,10 @@
       <!-- create card to wrap everything-->
 
       <div class="col-sm">
-        <Image :imageId="images[0].image_id" :imageUrl="images[0].image_url" />
+        <ImageCandidate :imageId="images[0].image_id" :imageUrl="images[0].image_url" />
       </div>
       <div class="col-sm">
-        <Image :imageId="images[1].image_id" :imageUrl="images[1].image_url" />
+        <ImageCandidate :imageId="images[1].image_id" :imageUrl="images[1].image_url" />
       </div>
 
       <div v-if="!duplicateValidated" class="check-duplicate col-sm d-flex flex-column justify-content-center" hidden>
@@ -42,12 +42,12 @@
 
 <script>
 import axios from 'axios';
-import Image from './Image.vue';
+import ImageCandidate from './ImageCandidate.vue';
 
 export default {
   name: 'ImagesCard',
   components: {
-    Image,
+    ImageCandidate,
   },
   props: {
     images: {
