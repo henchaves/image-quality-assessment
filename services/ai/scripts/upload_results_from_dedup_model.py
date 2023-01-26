@@ -40,11 +40,14 @@ if __name__ == "__main__":
                 duplicated_image_id = duplicated_image[0].split(".")[0]
                 probability = duplicated_image[1]
                 if int(base_image_id) > int(duplicated_image_id):
-                  base_image_id, duplicated_image_id = duplicated_image_id, base_image_id
+                  base_image_id_, duplicated_image_id_ = duplicated_image_id, base_image_id
+                else:
+                  base_image_id_ = base_image_id
+                  duplicated_image_id_ = duplicated_image_id
                 row = {
                   "group_id": group_id,
-                  "base_image_id": base_image_id,
-                  "duplicated_image_id": duplicated_image_id,
+                  "base_image_id": base_image_id_,
+                  "duplicated_image_id": duplicated_image_id_,
                   "probability": probability
                 }
           
