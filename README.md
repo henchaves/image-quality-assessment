@@ -1,6 +1,6 @@
 # IMT Nord Europe - Project P4 -  2022/2023
 ## A web application for assessing images using Deep Learning models
-You can find the report of this project on [https://www.overleaf.com/read/djhwdvnrssts](https://www.overleaf.com/read/djhwdvnrssts).
+You can find the report of this project at [https://www.overleaf.com/read/djhwdvnrssts](https://www.overleaf.com/read/djhwdvnrssts)
 
 
 ### Requirements
@@ -23,4 +23,4 @@ cd image-quality-assessment
 docker-compose up
 ```
 
-The application will start and be available at http://localhost:8080
+The application will start and be available at [http://localhost:8080](http://localhost:8080)
